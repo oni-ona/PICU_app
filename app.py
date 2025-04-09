@@ -30,7 +30,7 @@ if not st.session_state.logged_in:
     st.markdown("<h2 style='text-align: center;'> 💌 PICU 다이어리 💌 </h2>", unsafe_allow_html=True)
     st.markdown(
         "<p style='text-align: center; color: red; font-size: 0.9rem;'>"
-        "*사전에 인증된 보호자만 접근할 수 있습니다.<br>"
+        "사전에 인증된 보호자만 접근할 수 있습니다.<br>"
         "접근권한이 없는 분들은 면회시간에 담당 의료진에게 문의해 주세요."
         "</p>",
         unsafe_allow_html=True
@@ -58,9 +58,14 @@ if not st.session_state.logged_in:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --------------------------
-# 로그인 성공 시 화면 (임시)
-# --------------------------
+    st.markdown(
+        "<div style='text-align: center; color: gray; font-size: 0.8rem; margin-top: 40px;'>"
+        "본 사이트는 '소아중환자실 보호자를 위한 생성형 인공지능 기반의 임상 정보 자동 요약 시스템 개발 및 타당성 평가'<br>"
+        "연구 과정의 일환으로 개발된 가상의 웹페이지이며, 모든 환자 정보는 가상의 정보임을 참고 부탁드립니다."
+        "</div>",
+        unsafe_allow_html=True
+    )
+
 else:
     # 1. 상단 우측: 뒤로가기
     col1, col2 = st.columns([10, 3])
@@ -75,7 +80,7 @@ else:
 
     # 3. 입실일 기준 날짜 계산
     from datetime import datetime
-    admission_date = datetime.strptime(patient["admission_date"], "%Y-%m-%d")
+    admission_date = datetime.strptime(patient["admission_date"], "%Y.%m.%d")
     days_in_picu = (datetime.today() - admission_date).days
 
     # 4. 상단 헤더
@@ -101,7 +106,7 @@ else:
 
         weight_dict = patient["weight"]
         dates = [
-            datetime.strptime(d, "%Y-%m-%d").strftime("%m.%d") 
+            datetime.strptime(d, "%Y.%m.%d").strftime("%m.%d") 
             for d in weight_dict.keys()
         ]
         weights = list(weight_dict.values())
@@ -147,7 +152,6 @@ else:
         st.subheader("📝 오늘의 요약")
         st.markdown(patient["summary"])
 
-            # 오른쪽 아래 작은 글씨로 업데이트 일시 표시
         st.markdown(
             f"<p style='text-align: right; font-size: 0.8rem; color: gray;'>"
             f"마지막 업데이트: {patient['last_updated']}</p>",
@@ -162,8 +166,9 @@ else:
     with col3:
         st.subheader("🧪 검사 결과")
         st.markdown(
-            "<p style='font-size: 0.85rem; color: red;'>"
-            "*본 설명은 일반적인 정보로 환자마다 다르게 해석될 수 있으니, 자세한 사항은 담당 의료진과 상의하세요."
+            "<p style='font-size: 0.75rem; color: red;'>"
+            "해당 내용은 일반적인 설명으로, 환자마다 다르게 해석될 수 있습니다.<br>"
+            "자세한 사항은 담당 의료진과 상의하세요."
             "</p>",
             unsafe_allow_html=True
         )
@@ -239,25 +244,48 @@ else:
             </div>
             """, unsafe_allow_html=True)
 
-        with st.expander("🦠 균검사"):
+        with st.expander("🦠 배양검사"):
             st.markdown("• RV PCR (2025.08.22): Rhinovirus **Positive**")
             st.markdown("• RV PCR (2025.09.11): 검사 진행 중")
             st.markdown("• Urine Cx (2025.09.22): 검사 진행 중")
         
-        with st.expander("🩻 엑스레이"):
+        with st.expander("🩻 영상검사"):
+            st.markdown("• Chest AP(2025.08.22): No interval change")
             st.markdown("• Chest AP(2025.09.11): No interval change")
-
+    
     st.markdown("---")
 
     with col4:
-        st.subheader("💬 보호자 질문")
-        if "chat_history" not in st.session_state:
-            st.session_state.chat_history = []
+        st.subheader("💬 다른 궁금한 사항이 있나요?")
+        
+        if "question_log" not in st.session_state:
+            st.session_state.question_log = []
 
-        user_input = st.text_input("궁금한 점을 입력해주세요:")
-        if st.button("질문하기") and user_input:
-            st.session_state.chat_history.append(("👩 보호자", user_input))
-            st.session_state.chat_history.append(("🧑‍⚕️ 간호사", "해당 내용은 의료진이 면회 시 안내드릴게요 😊"))
+        input_col, button_col = st.columns([6, 2])
 
-        for speaker, message in st.session_state.chat_history:
-            st.write(f"{speaker}: {message}")
+        with input_col:
+            question = st.text_input(
+                "바로 확인은 어려운 점 양해 부탁드립니다.🙏🏻",
+                placeholder="궁금한 내용을 입력해주세요."
+            )
+
+        with button_col:
+            st.write("")
+            st.write("")
+            if st.button("확인", use_container_width=False):
+                timestamp = datetime.now().strftime("2025.09.12 %p %I:%M")
+                st.session_state.question_log.append(f"{timestamp} - {question}")
+
+    
+        if st.session_state.question_log:
+            st.markdown("**🗒️ 보호자님의 남긴 질문:**")
+            for q in reversed(st.session_state.question_log):  # 최근순 정렬
+                st.markdown(f"- {q}")
+        
+    st.markdown(
+        "<div style='text-align: center; color: gray; font-size: 0.8rem; margin-top: 40px;'>"
+        "본 사이트는 '소아중환자실 보호자를 위한 생성형 인공지능 기반의 임상 정보 자동 요약 시스템 개발 및 타당성 평가'<br>"
+        "연구 과정의 일환으로 개발된 가상의 웹페이지이며, 모든 환자 정보는 가상의 정보임을 참고 부탁드립니다."
+        "</div>",
+        unsafe_allow_html=True
+    )
