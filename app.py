@@ -7,9 +7,6 @@ from patient_data import mock_patient_data
 # 페이지 설정
 st.set_page_config(page_title="보호자 전용 로그인", layout="centered")
 
-# 로고 이미지 (logo.png 파일이 같은 폴더에 있어야 함!)
-logo = Image.open("logo.png")
-
 # 세션 초기화
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -20,12 +17,6 @@ if "patient_id" not in st.session_state:
 # 로그인 화면
 # --------------------------
 if not st.session_state.logged_in:
-
-    # ⬆️ 로고 + 제목 + 안내문 (상단 고정)
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        st.image("logo.png", width=200)
-
 
     st.markdown("<h2 style='text-align: center;'> 💌 PICU 다이어리 💌 </h2>", unsafe_allow_html=True)
     st.markdown(
