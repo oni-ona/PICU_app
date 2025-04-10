@@ -168,7 +168,7 @@ else:
 
             st.markdown(
                 "<p style='font-size: 0.75rem; color: gray; margin-bottom: 6px;'>"
-                "hs-CRP는 고감도 C-반응단백 검사로, 여러가지 염증반응이나 조직손상을 확인하기 위한 검사입니다."
+                "hs-CRP는 고감도 C-반응단백 검사로, 여러가지 염증반응이나 조직손상을 확인하기 위한 검사입니다.<br>"
                 "참고치: 0.0 ~ 0.5 (mg/dL)"
                 "</p>",
                 unsafe_allow_html=True
@@ -205,7 +205,7 @@ else:
 
             st.markdown(
                 "<p style='font-size: 0.75rem; color: gray; margin-bottom: 6px;'>"
-                "PCT(프로칼시토닌)는 세균 감염에 반응하는 물질로, 세균성 패혈증을 확인하기 위한 검사입니다." \
+                "PCT(프로칼시토닌)는 세균 감염에 반응하는 물질로, 세균성 패혈증을 확인하기 위한 검사입니다.<br>"
                 "참고치: 0.0 ~ 0.5 (ng/mL)"
                 "</p>",
                 unsafe_allow_html=True
