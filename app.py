@@ -201,7 +201,7 @@ else:
             </div>
             """, unsafe_allow_html=True)
 
-            st.markdown("<h6>• PCT</h6>", unsafe_allow_html=True)
+            st.markdown("<h6 style='margin-top: 12px; margin-bottom:2px;'>• PCT</h6>", unsafe_allow_html=True)
 
             st.markdown(
                 "<p style='font-size: 0.75rem; color: gray; margin-bottom: 6px;'>"
